@@ -27,4 +27,15 @@ describe('WithEnvironment', () => {
 
     expect(container.innerHTML).toContain('hello')
   })
+
+  it('is fail-safe against plain children', () => {
+    // some type hacks to be able to test the component with unallowed children
+    const UnsafeWith = WithEnvironment as unknown as new () => React.Component
+
+    expect(() => {
+      const { container } = render(<UnsafeWith>is this OK?</UnsafeWith>)
+
+      expect(container.innerHTML).toContain('is this OK?')
+    }).not.toThrow()
+  })
 })

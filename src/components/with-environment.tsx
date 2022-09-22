@@ -1,4 +1,4 @@
-import { Component, cloneElement } from 'react'
+import { Component, cloneElement, isValidElement } from 'react'
 
 import { getEnvironment } from '../get-env'
 import { type DetectEnvParams } from '../detect-env'
@@ -22,8 +22,8 @@ export interface WithEnvironmentProps {
  * </WithEnvironment>
  * ```
  */
-class WithEnvironment extends Component<WithEnvironmentProps> {
-  constructor(props: WithEnvironmentProps) {
+class WithEnvironment<P extends WithEnvironmentProps> extends Component<P> {
+  constructor(props: P) {
     super(props)
   }
 
@@ -39,6 +39,10 @@ class WithEnvironment extends Component<WithEnvironmentProps> {
       }
 
       this.detectedEnv = getEnvironment(detectParams)
+    }
+
+    if (!isValidElement(this.props.children)) {
+      return this.props.children
     }
 
     // passes the `env` down as a prop
